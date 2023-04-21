@@ -15,18 +15,27 @@ def generate_fico_bands(start_score, end_score, num_ranks):
     return fico_bands
 from datetime import datetime, timedelta
 
-def generate_month_list(date_str, n):
+from datetime import datetime, timedelta
+
+def generate_month_list_backward(date_str, n):
+    """
+    Generate a list of YYYYMM for the previous N months from the given date.
+
+    :param date_str: A string representing the starting date in the format 'YYYYMM'.
+    :param n: An integer representing the number of previous months to generate.
+    :return: A list of strings representing the previous N months in the format 'YYYYMM'.
+    """
     # Convert the input date string to a datetime object
     date_obj = datetime.strptime(date_str, '%Y%m')
 
     # Create an empty list to store the month list
     month_list = []
 
-    # Generate N months
-    for i in range(n):
-        # Calculate the new month by adding i months to the input date
-        new_month = date_obj + timedelta(days=(i * 30))
-        
+    # Generate N months backward
+    for i in range(1, n + 1):
+        # Calculate the new month by subtracting i months from the input date
+        new_month = date_obj - timedelta(days=(i * 30))
+
         # Convert the new month back to a string in the format YYYYMM
         new_month_str = new_month.strftime('%Y%m')
 
@@ -38,8 +47,9 @@ def generate_month_list(date_str, n):
 # Example usage:
 date_str = '202201'
 n = 6
-month_list = generate_month_list(date_str, n)
+month_list = generate_month_list_backward(date_str, n)
 print(month_list)
+
 
 # Example usage:
 start_score = 300
