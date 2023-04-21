@@ -17,6 +17,9 @@ from datetime import datetime, timedelta
 
 from datetime import datetime, timedelta
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 def generate_month_list_backward(date_str, n):
     """
     Generate a list of YYYYMM for the previous N months from the given date.
@@ -34,7 +37,7 @@ def generate_month_list_backward(date_str, n):
     # Generate N months backward
     for i in range(1, n + 1):
         # Calculate the new month by subtracting i months from the input date
-        new_month = date_obj - timedelta(days=(i * 30))
+        new_month = date_obj - relativedelta(months=i)
 
         # Convert the new month back to a string in the format YYYYMM
         new_month_str = new_month.strftime('%Y%m')
