@@ -354,4 +354,53 @@ class MoreAdvancedCustomLogger(AdvancedCustomLogger):
         """
         self.logger.addHandler(custom_handler)
 
+from logging.handlers import TimedRotatingFileHandler, QueueHandler, QueueListener
+from queue import Queue
+
+class EvenMoreAdvancedCustomLogger(MoreAdvancedCustomLogger):
+    """
+    An even more advanced custom logger class that extends MoreAdvancedCustomLogger and adds further advanced features.
+    """
+
+    def add_timed_rotating_file_handler(self, log_file, when='D', interval=1, backup_count=30, log_level=logging.INFO, log_format=None):
+        """
+        Add a time-based rotating file handler to the logger.
+
+        :param log_file: The path to the log file.
+        :param when: The time unit for rotation. Defaults to 'D' for daily rotation.
+        :param interval: The number of time units between rotations. Defaults to 1.
+        :param backup_count: The number of backup files to keep. Defaults to 30.
+        :param log_level: The log level for the file handler. Defaults to logging.INFO.
+        :param log_format: The format for log messages. Defaults to None, which uses the logger's default format.
+        """
+        if not log_format:
+            log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+        formatter = logging.Formatter(log_format)
+        timed_rotating_file_handler = TimedRotatingFileHandler(log_file, when=when, interval=interval, backupCount=backup_count)
+        timed_rotating_file_handler.setFormatter(formatter)
+        timed_rotating_file_handler.setLevel(log_level)
+        self.logger.addHandler(timed_rotating_file_handler)
+
+    def enable_async_logging(self, queue=None):
+        """
+        Enable asynchronous logging by wrapping all handlers in QueueHandlers and setting up a QueueListener.
+
+        :param queue: An optional queue.Queue instance to use for async logging. If not provided, a new queue will be created.
+        """
+        if queue is None:
+            queue = Queue()
+
+        handlers = self.logger.handlers
+        self.logger.handlers = []
+
+        for handler in handlers:
+            queue_handler = QueueHandler(queue)
+            queue_handler.setLevel(handler.level)
+            self.logger.addHandler(queue_handler)
+
+        listener = QueueListener(queue, *handlers)
+        listener.start()
+
+        return listener
 
