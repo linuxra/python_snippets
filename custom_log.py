@@ -244,4 +244,72 @@ def add(a,b):
 result = add(10,9)
 logger.info(f"{result}")
 
+import smtplib
+from logging.handlers import RotatingFileHandler, SMTPHandler
+from email.message import EmailMessage
+
+class AdvancedCustomLogger(CustomLogger):
+    """
+    An advanced custom logger class that extends CustomLogger and adds more advanced features.
+    """
+
+    class LogLevelContext:
+        """
+        A context manager for temporarily changing the log level.
+        """
+
+        def __init__(self, logger, temporary_log_level):
+            self.logger = logger
+            self.original_log_level = logger.logger.level
+            self.temporary_log_level = temporary_log_level
+
+        def __enter__(self):
+            self.logger.set_log_level(self.temporary_log_level)
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            self.logger.set_log_level(self.original_log_level)
+
+    def log_level_context(self, temporary_log_level):
+        """
+        Create a context manager for temporarily changing the log level.
+
+        :param temporary_log_level: The temporary log level to use within the context.
+        :return: A LogLevelContext instance.
+        """
+        return self.LogLevelContext(self, temporary_log_level)
+
+    def add_email_notification(self, mailhost, fromaddr, toaddrs, subject, credentials=None, secure=None, log_level=logging.ERROR):
+        """
+        Add email notifications for specific log levels.
+
+        :param mailhost: The mail server host.
+        :param fromaddr: The sender's email address.
+        :param toaddrs: The recipients' email addresses (a list or tuple of strings).
+        :param subject: The subject of the email.
+        :param credentials: A tuple of the username and password to use for authentication (optional).
+        :param secure: A tuple to enable a secure connection (optional).
+        :param log_level: The log level for which email notifications should be sent. Defaults to logging.ERROR.
+        """
+        email_handler = SMTPHandler(mailhost, fromaddr, toaddrs, subject, credentials, secure)
+        email_handler.setLevel(log_level)
+        self.logger.addHandler(email_handler)
+
+    def add_rotating_file_handler(self, log_file, max_bytes=10485760, backup_count=10, log_level=logging.INFO, log_format=None):
+        """
+        Add a rotating file handler to the logger.
+
+        :param log_file: The path to the log file.
+        :param max_bytes: The maximum file size (in bytes) before rotating. Defaults to 10MB.
+        :param backup_count: The number of backup files to keep. Defaults to 10.
+        :param log_level: The log level for the file handler. Defaults to logging.INFO.
+        :param log_format: The format for log messages. Defaults to None, which uses the logger's default format.
+        """
+        if not log_format:
+            log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+        formatter = logging.Formatter(log_format)
+        rotating_file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
+        rotating_file_handler.setFormatter(formatter)
+        rotating_file_handler.setLevel(log_level)
+        self.logger.addHandler(rotating_file_handler)
 
