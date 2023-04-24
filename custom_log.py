@@ -229,7 +229,7 @@ def logging_decorator(logger):
                 logger.info(f"Function '{func.__name__}' returned: {arg_repr(result)}")
                 return result
             except Exception as e:
-                logger.error(f"Function '{func.__name__}' raised an exception: {e}", exc_info=True)
+                logger.error(f"Function '{func.__name__}' raised an exception: {e}")
                 raise
         return wrapper
     return decorator
