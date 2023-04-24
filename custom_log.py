@@ -313,3 +313,45 @@ class AdvancedCustomLogger(CustomLogger):
         rotating_file_handler.setLevel(log_level)
         self.logger.addHandler(rotating_file_handler)
 
+
+from logging import Filter, Handler
+
+class MoreAdvancedCustomLogger(AdvancedCustomLogger):
+    """
+    A more advanced custom logger class that extends AdvancedCustomLogger and adds even more advanced features.
+    """
+
+    class CustomLogFilter(Filter):
+        """
+        A custom log filter class to filter log records based on a user-defined condition.
+        """
+
+        def __init__(self, condition):
+            super().__init__()
+            self.condition = condition
+
+        def filter(self, record):
+            return self.condition(record)
+
+    def add_log_filter(self, handler_name, condition):
+        """
+        Add a custom log filter to a specific handler based on a user-defined condition.
+
+        :param handler_name: The name of the handler to add the filter to.
+        :param condition: A callable that takes a log record as input and returns True if the log record should be processed, False otherwise.
+        """
+        custom_filter = self.CustomLogFilter(condition)
+        for handler in self.logger.handlers:
+            if handler.__class__.__name__ == handler_name:
+                handler.addFilter(custom_filter)
+                break
+
+    def add_custom_handler(self, custom_handler: Handler):
+        """
+        Add a custom log handler to the logger.
+
+        :param custom_handler: An instance of a custom log handler that inherits from the logging.Handler class.
+        """
+        self.logger.addHandler(custom_handler)
+
+
