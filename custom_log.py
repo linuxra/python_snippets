@@ -403,4 +403,48 @@ class EvenMoreAdvancedCustomLogger(MoreAdvancedCustomLogger):
         listener.start()
 
         return listener
+    
+from logging.handlers import SocketHandler, MemoryHandler
+
+class FurtherAdvancedCustomLogger(EvenMoreAdvancedCustomLogger):
+    """
+    A further advanced custom logger class that extends EvenMoreAdvancedCustomLogger and adds more advanced features.
+    """
+
+    def add_socket_handler(self, host, port, log_level=logging.INFO, log_format=None):
+        """
+        Add a SocketHandler for remote logging.
+
+        :param host: The hostname of the remote log server.
+        :param port: The port number of the remote log server.
+        :param log_level: The log level for the SocketHandler. Defaults to logging.INFO.
+        :param log_format: The format for log messages. Defaults to None, which uses the logger's default format.
+        """
+        if not log_format:
+            log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+        formatter = logging.Formatter(log_format)
+        socket_handler = SocketHandler(host, port)
+        socket_handler.setFormatter(formatter)
+        socket_handler.setLevel(log_level)
+        self.logger.addHandler(socket_handler)
+
+    def add_memory_handler(self, capacity, target_handler=None, log_level=logging.INFO, log_format=None):
+        """
+        Add a MemoryHandler for buffering log records.
+
+        :param capacity: The maximum number of log records to buffer.
+        :param target_handler: The target handler to which buffered log records should be sent. Defaults to None, which means the handler will not flush automatically.
+        :param log_level: The log level for the MemoryHandler. Defaults to logging.INFO.
+        :param log_format: The format for log messages. Defaults to None, which uses the logger's default format.
+        """
+        if not log_format:
+            log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+        formatter = logging.Formatter(log_format)
+        memory_handler = MemoryHandler(capacity, target=target_handler)
+        memory_handler.setFormatter(formatter)
+        memory_handler.setLevel(log_level)
+        self.logger.addHandler(memory_handler)
+
 
