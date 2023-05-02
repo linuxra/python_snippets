@@ -51,3 +51,27 @@ input_df = pd.DataFrame(input_data)
 df3 = generate_score_bands(input_df=input_df)
 
 print(df3)
+import pandas as pd
+
+def merge_dataframes(left_df, right_df, right_columns, keys):
+    """
+    Merge two dataframes on multiple keys. Keep all columns from the left dataframe
+    and only the specified columns from the right dataframe.
+
+    Parameters:
+    left_df (pd.DataFrame): The left dataframe.
+    right_df (pd.DataFrame): The right dataframe.
+    right_columns (List[str]): The columns to keep from the right dataframe.
+    keys (List[str]): The columns to merge on.
+
+    Returns:
+    pd.DataFrame: The merged dataframe.
+    """
+    # Keep only the specified columns from the right dataframe
+    right_df = right_df[right_columns + keys]
+
+    # Merge the dataframes
+    merged_df = pd.merge(left_df, right_df, on=keys, how='left')
+
+    return merged_df
+
