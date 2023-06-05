@@ -224,70 +224,70 @@ class OrangeTable(Table):
                     table[j, i].set_facecolor('lightgrey')
         print("", table[23, 18], "Facecolor:", table[23, 18].get_facecolor())
 
-#
-# n_rows = 24
-# n_cols = 39
-#
-# # Generate random 6-letter strings
-# random_strings = [''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=6)) for _ in range(n_rows)]
-#
-# random_strings1 = [''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=6)) for _ in range(10)]
-#
-# # Create DataFrame
-# df = pd.DataFrame()
-#
-# df1 = pd.DataFrame()
-#
-# # Add first 3 columns of 6-letter strings
-# for i in range(3):
-#     df[f'col{i + 1}'] = random_strings
-#
-# # Add remaining columns of random integers
-# # Add remaining columns of random integers with 6 digits
-# for i in range(3, n_cols):
-#     df[f'col{i + 1}'] = np.random.randint(100000, 1000000, size=n_rows)
-#
-# for i in range(3):
-#     df1[f'col{i + 1}'] = random_strings1
-#
-# # Add remaining columns of random integers
-# # Add remaining columns of random integers with 6 digits
-# for i in range(3, n_cols):
-#     df1[f'col{i + 1}'] = np.random.randint(100000, 1000000, size=10)
-#
-# # Create a table
-# table = Table(df1, "Table with 39 columns and 24 rows")
-# table.add_annotations("Testing the table annotations")
-# table.scale = (1, 1.7)
-# #table.first_columns_to_color = 0
-# table.save("table4.pdf")
-#
-# table2 = OrangeTable(df, 'Orange Table')
-#
-# # Change colors using setters
-# table2.header_color = mcolors.CSS4_COLORS['orangered']
-# table2.first_three_columns_color = mcolors.CSS4_COLORS['navajowhite']
-# table2.other_cell_color = mcolors.CSS4_COLORS['seashell']
-# table2.add_annotations("Testing Annotations")
-# table.first_columns_to_color = 3
-# table.scale = (1, 1.7)
-#
-# # Save table to a PDF
-# table2.save("orange_table4_setters.pdf")
-#
-#
-# def random_string(length):
-#     letters = string.ascii_letters
-#     return ''.join(random.choice(letters) for i in range(length))
-#
-# data = {
-#     'ShortString': [random_string(20) for _ in range(20)],
-#     'LongString': [random_string(200) for _ in range(20)]
-# }
-#
-# df2 = pd.DataFrame(data)
-#
-# df3 = df2.head(3)
-#
-# table4 = Table(df2,"My Title")
-# table4.save("long_string.pdf")
+
+n_rows = 24
+n_cols = 39
+
+# Generate random 6-letter strings
+random_strings = [''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=6)) for _ in range(n_rows)]
+
+random_strings1 = [''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=6)) for _ in range(10)]
+
+# Create DataFrame
+df = pd.DataFrame()
+
+df1 = pd.DataFrame()
+
+# Add first 3 columns of 6-letter strings
+for i in range(3):
+    df[f'col{i + 1}'] = random_strings
+
+# Add remaining columns of random integers
+# Add remaining columns of random integers with 6 digits
+for i in range(3, n_cols):
+    df[f'col{i + 1}'] = np.random.randint(100000, 1000000, size=n_rows)
+
+for i in range(3):
+    df1[f'col{i + 1}'] = random_strings1
+
+# Add remaining columns of random integers
+# Add remaining columns of random integers with 6 digits
+for i in range(3, n_cols):
+    df1[f'col{i + 1}'] = np.random.randint(100000, 1000000, size=10)
+
+# Create a table
+table = Table(df1, "Table with 39 columns and 24 rows")
+table.add_annotations("Testing the table annotations")
+table.scale = (1, 1.7)
+#table.first_columns_to_color = 0
+table.save("table4.pdf")
+
+table2 = OrangeTable(df, 'Orange Table')
+
+# Change colors using setters
+table2.header_color = mcolors.CSS4_COLORS['orangered']
+table2.first_three_columns_color = mcolors.CSS4_COLORS['navajowhite']
+table2.other_cell_color = mcolors.CSS4_COLORS['seashell']
+table2.add_annotations("Testing Annotations")
+table.first_columns_to_color = 3
+table.scale = (1, 1.7)
+
+# Save table to a PDF
+table2.save("orange_table4_setters.pdf")
+
+
+def random_string(length):
+    letters = string.ascii_letters
+    return ''.join(random.choice(letters) for i in range(length))
+
+data = {
+    'ShortString': [random_string(20) for _ in range(20)],
+    'LongString': [random_string(200) for _ in range(20)]
+}
+
+df2 = pd.DataFrame(data)
+
+df3 = df2.head(3)
+
+table4 = Table(df2,"My Title")
+table4.save("long_string.pdf")
