@@ -303,11 +303,9 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 import matplotlib.pyplot as plt
-
 class MyClass:
     def __init__(self, title):
         self.title = title
-
     def draw_plots(self, df):
         fig = plt.figure(figsize=(20, 15))
         gs = GridSpec(2, 3, figure=fig)
@@ -320,35 +318,43 @@ class MyClass:
         values_scaled = scaler.fit_transform(df[df.columns[2]].values.reshape(-1,1)) * 1000
 
         # Bubble plot
-        scatter = fig.add_subplot(gs[0, 2])
-        scatter.scatter(x=df[df.columns[1]], y=df[df.columns[2]],
+        ax_bubble = fig.add_subplot(gs[0, 2])
+        scatter = ax_bubble.scatter(x=df[df.columns[1]], y=df[df.columns[2]],
                         s=values_scaled,
                         c=df[df.columns[0]].astype('category').cat.codes, cmap=colormap, alpha=0.5)
 
         # Create a legend for the colors
-        colorbar = plt.colorbar(scatter, ticks=range(len(df[df.columns[0]].unique())), ax=scatter)
+        colorbar = plt.colorbar(scatter, ticks=range(len(df[df.columns[0]].unique())), ax=ax_bubble)
         colorbar.set_label(df.columns[0])
         colorbar.set_ticks([i + 0.5 for i in range(len(df[df.columns[0]].unique()))])
         colorbar.set_ticklabels(df[df.columns[0]].unique())
 
         # Line plot
-        lineplot = fig.add_subplot(gs[1, :])
-        sns.lineplot(data=df, x=df.columns[1], y=df.columns[2], hue=df.columns[0], ax=lineplot)
+        ax_line = fig.add_subplot(gs[1, :])
+        sns.lineplot(data=df, x=df.columns[1], y=df[df.columns[2]], hue=df.columns[0], ax=ax_line)
 
         # Stacked bar plot
         df_pivot = df.pivot(index=df.columns[1], columns=df.columns[0], values=df.columns[2])
-        barplot = fig.add_subplot(gs[0, 0])
-        df_pivot.plot(kind='bar', stacked=True, ax=barplot)
+        ax_bar = fig.add_subplot(gs[0, 0])
+        df_pivot.plot(kind='bar', stacked=True, ax=ax_bar)
 
         # Define a custom colormap
         c_map = LinearSegmentedColormap.from_list('mycmap', ['yellow', 'green'])
 
         # Heatmap
-        heatmap = fig.add_subplot(gs[0, 1])
-        sns.heatmap(df_pivot, cmap=c_map, ax=heatmap)
+        ax_heat = fig.add_subplot(gs[0, 1])
+        sns.heatmap(df_pivot, cmap=c_map, ax=ax_heat)
 
         # Set the title of the figure
         fig.suptitle(self.title)
 
         plt.tight_layout()
         plt.show()
+df = pd.DataFrame({
+    'group': ['A', 'A', 'B', 'B', 'A', 'A', 'B', 'B'],
+    'time_period': [1, 2, 1, 2, 3, 4, 3, 4],
+    'value': [6000, 7000, 8000, 9000, 6000, 7000, 8000, 9000]
+})
+
+obj = MyClass(title='My Bubble Plot')
+obj.draw_plots(df)
